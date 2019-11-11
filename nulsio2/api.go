@@ -386,7 +386,7 @@ func (this *Client) SendRawTransaction(hex string) (string, error) {
 	}
 
 	if result.Get("value").Exists() {
-		return result.Get("value").String(), nil
+		return result.Get("hash").String(), nil
 	}
 
 	return "", errors.New("unknow error")

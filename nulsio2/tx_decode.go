@@ -3,6 +3,7 @@ package nulsio2
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/blocktree/go-owcrypt"
 	"github.com/blocktree/nulsio2-adapter/nulsio2_trans"
 	"github.com/blocktree/openwallet/common"
 	"github.com/blocktree/openwallet/openwallet"
@@ -271,16 +272,12 @@ func (decoder *TransactionDecoder) SignRawTransaction(wrapper openwallet.WalletD
 				return err
 			}
 
-			//txHash = ([]byte)(keySignature.Message)
-
-			//签名交易
-			/////////交易单哈希签名
-			signature, err := nulsio2_trans.SignTransactionMessage(txHash, keyBytes)
-			if err != nil {
-				return fmt.Errorf("transaction hash sign failed, unexpected error: %v", err)
-			} else {
-
+			//签名交易（无特殊签名）
+			signature, retCode := owcrypt.Signature(keyBytes, nil, 0, txHash, 32, owcrypt.ECC_CURVE_SECP256K1)
+			if retCode != owcrypt.SUCCESS {
+				return fmt.Errorf("transaction hash sign failed, unexpected error: Failed to sign message!")
 			}
+
 
 			keySignature.Signature = hex.EncodeToString(signature)
 		}

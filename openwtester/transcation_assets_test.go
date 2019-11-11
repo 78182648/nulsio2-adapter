@@ -127,7 +127,7 @@ func TestTransfer(t *testing.T) {
 	//to := "NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC"
 
 	tos := []string{
-		"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
+		"NULSd6HgWjQe8PkbKYX3L5q6ug7s72auerR7v",
 		"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
 		"NULSd6HgfKa4ssc16FDQecGRSSXzcLDnu6pds",
 		"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
