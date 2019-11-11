@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"github.com/blocktree/go-owcrypt"
-	"github.com/blocktree/openwallet/log"
 	"time"
 )
 
@@ -78,7 +77,6 @@ func (t Transaction) encodeToBytes() ([]byte, error) {
 	ret = append(ret, txType...)
 	now := time.Now().Unix()
 	//now = now + 156779961  //新版本的offset
-	log.Errorf("now:",now)
 	nowByte := uint32ToLittleEndianBytes(uint32(now))
 	ret = append(ret, nowByte...)
 	if t.Remark == nil {
