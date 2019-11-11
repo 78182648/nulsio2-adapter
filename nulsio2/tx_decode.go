@@ -68,6 +68,11 @@ func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet
 		return fmt.Errorf("[%s] have not addresses", accountID)
 	}
 
+	if len(rawTx.To) > 1 {
+		return openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support many address in nuls2.0")
+
+	}
+
 	searchAddrs := make([]string, 0)
 	for _, address := range addresses {
 		searchAddrs = append(searchAddrs, address.Address)
@@ -97,11 +102,7 @@ func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet
 
 	amount := common.StringNumToBigIntWithExp(amountStr, decimals)
 
-	if len(rawTx.FeeRate) > 0 {
-		fixFees = common.StringNumToBigIntWithExp(rawTx.FeeRate, decimals)
-	} else {
-		fixFees = common.StringNumToBigIntWithExp(decoder.wm.Config.FixFees, decimals)
-	}
+	fixFees = common.StringNumToBigIntWithExp(decoder.wm.Config.FixFees, decimals)
 
 	for _, addrBalance := range addrBalanceArray {
 
@@ -278,7 +279,6 @@ func (decoder *TransactionDecoder) SignRawTransaction(wrapper openwallet.WalletD
 				return fmt.Errorf("transaction hash sign failed, unexpected error: Failed to sign message!")
 			}
 
-
 			keySignature.Signature = hex.EncodeToString(signature)
 		}
 	}
@@ -371,16 +371,9 @@ func (decoder *TransactionDecoder) SubmitRawTransaction(wrapper openwallet.Walle
 	rawTx.TxID = txId
 
 	decimals := int32(0)
-	//fees := "0"
-	//if rawTx.Coin.IsContract {
-	//	decimals = int32(rawTx.Coin.Contract.Decimals)
-	//	fees = "0"
-	//} else {
-	//	decimals = int32(decoder.wm.Decimal())
-	fees := rawTx.Fees
-	//}
 
-	//rawTx.TxID = txid
+	fees := rawTx.Fees
+
 	rawTx.IsSubmit = true
 
 	//记录一个交易单
@@ -452,7 +445,13 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	for toAddress, amount := range rawTx.To {
 
 		amountDecimal, _ := decimal.NewFromString(amount)
+
+		//累加
+		accountTotalSent = accountTotalSent.Add(amountDecimal)
+
 		amountDecimal = amountDecimal.Shift(decoder.wm.Decimal())
+
+
 
 		to, err := decoder.wm.Api.GetAddressBalance(toAddress, 1)
 		if err != nil {
@@ -492,7 +491,6 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	//装配签名
 	keySigs := make([]*openwallet.KeySignature, 0)
 
-
 	addr, err := wrapper.GetAddress(addrBalance.Address)
 	if err != nil {
 		return err
@@ -507,7 +505,6 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 
 	messageStr := hex.EncodeToString(message)
 
-
 	signature := openwallet.KeySignature{
 		EccType: decoder.wm.Config.CurveType,
 		Nonce:   "",
@@ -516,6 +513,8 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	}
 
 	keySigs = append(keySigs, &signature)
+
+	rawTx.Fees = "0.001" //默认手续费
 
 	feesDec, _ := decimal.NewFromString(rawTx.Fees)
 	accountTotalSent = accountTotalSent.Add(feesDec)
