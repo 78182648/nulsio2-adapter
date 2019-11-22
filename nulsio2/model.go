@@ -52,6 +52,19 @@ type Block struct {
 	Fork   bool
 }
 
+
+func (n *Block) ToBlockHeader() *openwallet.BlockHeader {
+	obj := &openwallet.BlockHeader{}
+	//解析json
+	obj.Hash = n.Hash
+	obj.Merkleroot = n.Merkleroot
+	obj.Previousblockhash = n.Previousblockhash
+	obj.Height = uint64(n.Height)
+	obj.Time = uint64(time.Now().Unix())
+	obj.Symbol = "NULS2"
+	return obj
+}
+
 //UnscanRecord 扫描失败的区块及交易
 type UnscanRecord struct {
 	ID          string `storm:"id"` // primary key
@@ -61,8 +74,8 @@ type UnscanRecord struct {
 }
 
 //NewUnscanRecord new UnscanRecord
-func NewUnscanRecord(height uint64, txID, reason string) *UnscanRecord {
-	obj := UnscanRecord{}
+func NewUnscanRecord(height uint64, txID, reason string) *openwallet.UnscanRecord {
+	obj := openwallet.UnscanRecord{}
 	obj.BlockHeight = height
 	obj.TxID = txID
 	obj.Reason = reason
@@ -115,6 +128,19 @@ func (n *NusBlock) BlockHeader(symbol string) *openwallet.BlockHeader {
 	obj.Height = uint64(n.Height)
 	obj.Time = uint64(time.Now().Unix())
 	obj.Symbol = symbol
+	return obj
+}
+
+
+func (n *NusBlock) ToBlock() *Block {
+	obj := &Block{}
+	//解析json
+	obj.Hash = n.Hash
+	obj.Merkleroot = n.MerkleHash
+	obj.Previousblockhash = n.PreHash
+	obj.Height = uint32(n.Height)
+	obj.Time = uint64(time.Now().Unix())
+	obj.Symbol = "NULS2"
 	return obj
 }
 

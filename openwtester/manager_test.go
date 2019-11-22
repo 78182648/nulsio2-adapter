@@ -11,6 +11,8 @@ import (
 var (
 	testApp        = "NULScoin-adapter"
 	configFilePath = filepath.Join("conf")
+	dbFilePath = filepath.Join("data", "db")
+	dbFileName = "blockchain-NULS2.db"
 )
 
 func testInitWalletManager() *openw.WalletManager {
@@ -172,9 +174,9 @@ func TestBatchCreateAddressByAccount(t *testing.T) {
 		return
 	}
 
-	decoder := assetsMgr.GetAddressDecode()
+	//decoder := assetsMgr.GetAddressDecode()
 
-	addrArr, err := openwallet.BatchCreateAddressByAccount(account, decoder, 10, 20)
+	addrArr, err := openwallet.BatchCreateAddressByAccount(account, assetsMgr, 10, 20)
 	if err != nil {
 		t.Errorf("error: %v", err)
 		return
