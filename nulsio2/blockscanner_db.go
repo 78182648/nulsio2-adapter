@@ -23,7 +23,7 @@ func (bs *NULSBlockScanner) SaveLocalBlockHead(blockHeight uint32, blockHash str
 }
 
 //GetLocalBlockHead 获取本地记录的区块高度和hash
-func (bs *NULSBlockScanner) GetLocalBlockHead() (uint32, string, error) {
+func (bs *NULSBlockScanner) GetLocalBlockHead() (uint64, string, error) {
 
 	if bs.BlockchainDAI == nil {
 		return 0, "", fmt.Errorf("Blockchain DAI is not setup ")
@@ -34,7 +34,7 @@ func (bs *NULSBlockScanner) GetLocalBlockHead() (uint32, string, error) {
 		return 0, "", err
 	}
 
-	return uint32(header.Height), header.Hash, nil
+	return uint64(header.Height), header.Hash, nil
 }
 
 //SaveLocalBlock 记录本地新区块
