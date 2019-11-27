@@ -111,7 +111,7 @@ func TestSubscribeAddress(t *testing.T) {
 		endRunning = make(chan bool, 1)
 		symbol     = "NULS2"
 		addrs      = map[string]string{
-			"NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF":"NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF",
+			"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H":"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H",
 		}
 	)
 
@@ -163,7 +163,7 @@ func TestSubscribeAddress(t *testing.T) {
 	}
 
 
-	//scanner.SetRescanBlockHeight(199718)
+	scanner.SetRescanBlockHeight(660797)
 
 	if scanner == nil {
 		log.Error(symbol, "is not support block scan")
@@ -183,6 +183,62 @@ func TestSubscribeAddress(t *testing.T) {
 
 
 func TestSubscribeScanBlock(t *testing.T) {
+
+	var (
+		symbol     = "NULS2"
+		addrs      = map[string]string{
+			//"Nsdzhw5UzcewtbpweAwXvU7MngCmdNag": "sender",
+			"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H":"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H",
+		}
+	)
+
+	//GetSourceKeyByAddress 获取地址对应的数据源标识
+	scanAddressFunc := func(address string) (string, bool) {
+		key, ok := addrs[address]
+		if !ok {
+			return "", false
+		}
+		return key, true
+	}
+
+	assetsMgr, err := openw.GetAssetsAdapter(symbol)
+	if err != nil {
+		log.Error(symbol, "is not support")
+		return
+	}
+
+	//读取配置
+	absFile := filepath.Join(configFilePath, symbol+".ini")
+
+	c, err := config.NewConfig("ini", absFile)
+	if err != nil {
+		return
+	}
+	assetsMgr.LoadAssetsConfig(c)
+
+	assetsLogger := assetsMgr.GetAssetsLogger()
+	if assetsLogger != nil {
+		assetsLogger.SetLogFuncCall(true)
+	}
+
+	//log.Debug("already got scanner:", assetsMgr)
+	scanner := assetsMgr.GetBlockScanner()
+	if scanner == nil {
+		log.Error(symbol, "is not support block scan")
+		return
+	}
+
+	scanner.SetBlockScanAddressFunc(scanAddressFunc)
+
+	sub := subscriberSingle{}
+	scanner.AddObserver(&sub)
+
+
+	time.Sleep(5*time.Second)
+}
+
+
+func TestExtractTransactionData(t *testing.T){
 
 	var (
 		symbol     = "NULS2"
@@ -230,9 +286,9 @@ func TestSubscribeScanBlock(t *testing.T) {
 
 	scanner.SetBlockScanAddressFunc(scanAddressFunc)
 
-	sub := subscriberSingle{}
-	scanner.AddObserver(&sub)
+	resu,_ := scanner.ExtractTransactionData("45551541f7ab98e7ce665b766ac1bce8e305be3e85f4cbe4b1411da1773f2613", func(target openwallet.ScanTarget) (s string, b bool) {
+		return  "NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF",true
+	})
 
-
-	time.Sleep(5*time.Second)
+	log.Warn(resu)
 }

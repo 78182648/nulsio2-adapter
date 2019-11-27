@@ -289,7 +289,7 @@ func (this *Client) GetBlockByHash(hash string) (*NusBlock, error) {
 
 //通过tx获取交易
 func (this *Client) GetTxByTxId(txId string) (*Tx, error) {
-	result, err := this.CallReq("/api/tx/hash/" + txId)
+	result, err := this.CallReq("/api/tx/" + txId)
 	if err != nil {
 		log.Errorf("GetBlockByHash  faield, err = %v \n", err)
 		return nil, err

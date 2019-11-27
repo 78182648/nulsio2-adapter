@@ -533,6 +533,7 @@ func (bs *NULSBlockScanner) extractTransaction(trx *Tx, blockHash string, result
 		success = true
 	)
 
+
 	if trx == nil {
 		//记录哪个区块哪个交易单没有完成扫描
 		success = false
@@ -681,6 +682,11 @@ func (bs *NULSBlockScanner) extractTxInput(trx *Tx, blockHash string, result *Ex
 
 		//in := vin[i]
 
+		if output.AssetsId != 1 || output.AssetsChainId != 1{
+			bs.wm.Log.Error("nuls not support other asset:", output.AssetsId ,",",output.AssetsChainId)
+			continue
+		}
+
 		txid := trx.Hash
 		//vout := output.Vout
 		//
@@ -823,6 +829,12 @@ func (bs *NULSBlockScanner) extractTxOutput(trx *Tx, blockHash string, result *E
 	//bs.wm.Log.Debug("vout:", vout.Array())
 	createAt := time.Now().Unix()
 	for n, output := range vout {
+
+		if output.AssetsId != 1 || output.AssetsChainId != 1{
+			bs.wm.Log.Error("nuls not support other asset:", output.AssetsId ,",",output.AssetsChainId)
+			continue
+		}
+
 
 		if output.LockTime > trx.BlockHeight {
 			bs.wm.Log.Error("nuls lockTime over Than now,height:", trx.BlockHeight)
