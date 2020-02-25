@@ -127,11 +127,13 @@ func TestTransfer(t *testing.T) {
 	//to := "NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC"
 
 	tos := []string{
+		"NULSd6HgTtSc4FxvR7UjMSjpiaEue8vLgvFUz",
 		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
-		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
-		//"NULSd6HgfKa4ssc16FDQecGRSSXzcLDnu6pds",
-		//"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
-		//"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
+		"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
+		"NULSd6HgYuJYUTZJXscSutnXBp37YUKY3khDf",
+		"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
+		"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
+		"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
 	}
 
 	//accountID := "4h4wnCmpzgy3ZTeoMHs3gjDCuWyXQcxDsk9dcwbNGhmR"

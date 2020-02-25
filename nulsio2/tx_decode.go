@@ -1000,16 +1000,20 @@ func (decoder *TransactionDecoder) createSimpleNrc20RawTransaction(
 		return openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "can't find the address:"+err.Error())
 	}
 
-	//装配输入
+	feeDe,_ := decimal.NewFromString(decoder.wm.Config.TokenFees)
+	if feeDe.Equal(decimal.Zero){
+		feeDe,_ = decimal.NewFromString("0.01")
+	}
+	//装配输入(直接使用手续费)
 	in := nulsio2_trans.Vin{
 		Address:       addrBalance.Address,
 		Nonce:         fromAddress.Nonce,
 		AssetsChainId: 1,
 		AssetsId:      1,
-		Amount:        uint64(addrBalance.Balance.Shift(decoder.wm.Decimal()).IntPart()),
+		Amount:        uint64(feeDe.Shift(decoder.wm.Decimal()).IntPart()),
 	}
 	vins = append(vins, in)
-	txFrom = append(txFrom, fmt.Sprintf("%s:%s", addrBalance.Address, addrBalance.Balance.String()))
+	txFrom = append(txFrom, fmt.Sprintf("%s:%s", addrBalance.Address, addrBalance.TokenBalance.String()))
 
 	//装配输出
 	for toAddress, amount := range rawTx.To {
