@@ -356,17 +356,16 @@ func (this *Client) VaildTransaction(hex string) (bool, error) {
 
 	params := make(map[string]interface{})
 	params["txHex"] = hex
-	_, err := this.CallPost("/api/accountledger/transaction/validate", params)
+	result, err := this.CallPost("/api/accountledger/transaction/validate", params)
 	if err != nil {
 		log.Errorf("VaildTransaction  faield, err = %v \n", err)
 		return false, err
 	}
-	//if !result.Get("success").Bool() {
-	//	log.Error("VaildTransaction  faield, err = ", result.Raw)
-	//	return false, errors.New("VaildTransaction  faield, err = "+result.Raw)
-	//}
+	if result.Get("value").Exists() {
+		return true, nil
+	}
 
-	return true, nil
+	return false, errors.New(result.Raw)
 }
 
 //广播交易
@@ -379,7 +378,7 @@ func (this *Client) SendRawTransaction(hex string) (string, error) {
 		log.Errorf("SendRawTransaction  faield, err = %v \n", err)
 		return "", err
 	}
-	log.Warn("result:", result)
+	//log.Warn("result:", result)
 	if result.Type != gjson.JSON {
 		log.Errorf("result of SendRawTransaction type error")
 		return "", errors.New("result of SendRawTransaction type error")

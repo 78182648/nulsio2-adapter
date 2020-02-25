@@ -16,9 +16,12 @@
 package nulsio2
 
 import (
+	"errors"
 	"github.com/astaxie/beego/config"
 	"github.com/blocktree/openwallet/log"
 	"github.com/blocktree/openwallet/openwallet"
+	"github.com/shopspring/decimal"
+	"math/big"
 )
 
 //CurveType 曲线类型
@@ -66,13 +69,17 @@ func (wm *WalletManager) GetBlockScanner() openwallet.BlockScanner {
 func (wm *WalletManager) LoadAssetsConfig(c config.Configer) error {
 
 	wm.Config.ServerAPI = c.String("serverAPI")
+
 	wm.Api.BaseURL = wm.Config.ServerAPI
 
 	wm.Config.DataDir = c.String("dataDir")
 
+	if c.String("tokenFees") != "" {
+		wm.Config.TokenFees = c.String("tokenFees")
+	}
+
 	//数据文件夹
 	wm.Config.makeDataDir()
-
 
 	return nil
 }
@@ -90,4 +97,31 @@ func (wm *WalletManager) GetAssetsLogger() *log.OWLogger {
 //GetSmartContractDecoder 获取智能合约解析器
 func (wm *WalletManager) GetSmartContractDecoder() openwallet.SmartContractDecoder {
 	return wm.ContractDecoder
+}
+
+
+func ConvertFloatStringToBigInt(amount string, decimals int) (*big.Int, error) {
+	vDecimal, _ := decimal.NewFromString(amount)
+	//if err != nil {
+	//	log.Error("convert from string to decimal failed, err=", err)
+	//	return nil, err
+	//}
+
+	if decimals <= 0 || decimals > 30 {
+		return nil, errors.New("wrong decimal input through")
+	}
+
+	decimalInt := big.NewInt(1)
+	for i := 0; i < decimals; i++ {
+		decimalInt.Mul(decimalInt, big.NewInt(10))
+	}
+
+	d, _ := decimal.NewFromString(decimalInt.String())
+	vDecimal = vDecimal.Mul(d)
+	rst := new(big.Int)
+	if _, valid := rst.SetString(vDecimal.String(), 10); !valid {
+		log.Error("conver to big.int failed")
+		return nil, errors.New("conver to big.int failed")
+	}
+	return rst, nil
 }

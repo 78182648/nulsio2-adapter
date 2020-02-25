@@ -1,7 +1,5 @@
 package nulsio2_trans
 
-import "github.com/blocktree/nulsio-adapter/nulsio_addrdec"
-
 type TxToken struct {
 	Sender          string
 	ContractAddress string
@@ -15,15 +13,16 @@ type TxToken struct {
 
 func newTxTokenToBytes(tx *TxToken) ([]byte, error) {
 	ret := make([]byte, 0)
-	sendBytes := nulsio_addrdec.Base58Decode([]byte(tx.Sender))
+	sendBytes:= AddressBase58Decode(tx.Sender)
 	ret = append(ret, sendBytes...)
-	contractAddress := nulsio_addrdec.Base58Decode([]byte(tx.ContractAddress))
+	//contractAddress := nulsio2_addrdec.Base58Decode([]byte(tx.ContractAddress))
+	contractAddress := AddressBase58Decode(tx.ContractAddress)
 	ret = append(ret, contractAddress...)
-	valueBytes := uint64ToLittleEndianBytes(tx.Value)
+	valueBytes := WriteBigInteger(int64(tx.Value))
 	ret = append(ret, valueBytes...)
-	gasLimitBytes := uint64ToLittleEndianBytes(tx.GasLimit)
+	gasLimitBytes := int64ToLittleEndianBytes(tx.GasLimit)
 	ret = append(ret, gasLimitBytes...)
-	price := uint64ToLittleEndianBytes(tx.Price)
+	price := int64ToLittleEndianBytes(tx.Price)
 	ret = append(ret, price...)
 	methodName, _ := GetBytesWithLength([]byte(tx.MethodName))
 	ret = append(ret, methodName...)

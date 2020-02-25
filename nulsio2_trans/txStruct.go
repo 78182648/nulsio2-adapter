@@ -61,16 +61,17 @@ func (t Transaction) encodeToBytes() ([]byte, error) {
 		return nil, errors.New("No input found in the transaction struct!")
 	}
 
-	if len(t.Vouts) == 0 {
-		return nil, errors.New("No output found in the transaction struct!")
-	}
+
 
 	ret := []byte{}
 	var txType []byte
 	if t.TxData == nil {
 		txType = uint16ToLittleEndianBytes(2)
+		if len(t.Vouts) == 0 {
+			return nil, errors.New("No output found in the transaction struct!")
+		}
 	}else{
-		txType = uint16ToLittleEndianBytes(101)
+		txType = uint16ToLittleEndianBytes(16)
 	}
 
 
@@ -88,7 +89,9 @@ func (t Transaction) encodeToBytes() ([]byte, error) {
 	if t.TxData == nil {
 		ret = append(ret, 0)
 	} else {
-		ret = append(ret, t.TxData...) //txData
+		TxData,_ := GetBytesWithLength(t.TxData)
+
+		ret = append(ret, TxData...) //txData
 	}
 
 	coinData := make([]byte,0)

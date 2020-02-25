@@ -78,7 +78,7 @@ func TestWalletManager_CreateAssetsAccount(t *testing.T) {
 	tm := testInitWalletManager()
 
 	walletID := "VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7"
-	account := &openwallet.AssetsAccount{Alias: "mainnetNULS3", WalletID: walletID, Required: 1, Symbol: "NULS2", IsTrust: true}
+	account := &openwallet.AssetsAccount{Alias: "mainnetNULS4", WalletID: walletID, Required: 1, Symbol: "NULS2", IsTrust: true}
 	account, address, err := tm.CreateAssetsAccount(testApp, walletID, "12345678", account, nil)
 	if err != nil {
 		log.Error(err)
@@ -153,6 +153,29 @@ func TestWalletManager_GetAddressList(t *testing.T) {
 }
 
 
+func TestWalletManager_GetAddressList2(t *testing.T) {
+
+	tm := testInitWalletManager()
+
+	walletID := "VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7"
+	accountID := "6Dy7yK3w73CSLtC6QD3ddvxNsVZ9f8ffkzEuzoDi5pt4"
+	//accountID := "4h4wnCmpzgy3ZTeoMHs3gjDCuWyXQcxDsk9dcwbNGhmR"
+	list, err := tm.GetAddressList(testApp, walletID, accountID, 0, -1, false)
+	if err != nil {
+		log.Error("unexpected error:", err)
+		return
+	}
+	for i, w := range list {
+		log.Info("address[", i, "] :", w.Address)
+		//log.Info("address[", i, "] :", w.PublicKey)
+	}
+	log.Info("address count:", len(list))
+
+	tm.CloseDB(testApp)
+}
+
+
+
 func TestBatchCreateAddressByAccount(t *testing.T) {
 
 	tm := testInitWalletManager()
@@ -190,3 +213,47 @@ func TestBatchCreateAddressByAccount(t *testing.T) {
 
 }
 
+
+
+
+
+func TestBatchCreateAddressByAccount2(t *testing.T) {
+
+	tm := testInitWalletManager()
+
+	symbol := "NULS2"
+	walletID := "VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7"
+	accountID := "7AskbZZjhevnJxWAsNZ5HsyeddptEsqVwPuTu9CcpMch"
+
+	account, err := tm.GetAssetsAccountInfo(testApp, walletID, accountID)
+	if err != nil {
+		t.Errorf("error: %v", err)
+		return
+	}
+
+
+	assetsMgr, err := openw.GetAssetsAdapter(symbol)
+	if err != nil {
+		log.Error(symbol, "is not support")
+		return
+	}
+
+	//decoder := assetsMgr.GetAddressDecode()
+
+	addrArr, err := openwallet.BatchCreateAddressByAccount(account, assetsMgr, 10, 20)
+	if err != nil {
+		t.Errorf("error: %v", err)
+		return
+	}
+	addrs := make([]string, 0)
+	for _, a := range addrArr {
+		log.Infof("address[%d]: %s", a.Index, a.Address)
+		addrs = append(addrs, a.Address)
+	}
+	log.Infof("create address")
+
+}
+
+
+//VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7  目标
+//NULSd6Hgj7CK5drU8PYGMQtjMjgR9zMZKRKbL

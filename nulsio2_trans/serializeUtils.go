@@ -3,7 +3,6 @@ package nulsio2_trans
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
 	"math/big"
 )
 
@@ -106,7 +105,6 @@ func Sha256Twice(target []byte) []byte {
 
 func WriteBigInteger(val int64) []byte {
 	result3 := big.NewInt(val).Bytes()
-	fmt.Println(result3)
 
 	result4 := make([]byte, 32)
 	for i := len(result3) - 1; i >= 0; i-- {

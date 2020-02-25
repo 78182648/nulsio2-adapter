@@ -127,8 +127,8 @@ func TestTransfer(t *testing.T) {
 	//to := "NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC"
 
 	tos := []string{
-		"NULSd6HgesXoGQerjvqA15BZEP35jn4vTf7JR",
-		"NULSd6HgijyueW5VLwEdYkYhgLaAEj2sQad2g",
+		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
+		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
 		//"NULSd6HgfKa4ssc16FDQecGRSSXzcLDnu6pds",
 		//"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
 		//"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
@@ -140,7 +140,7 @@ func TestTransfer(t *testing.T) {
 	testGetAssetsAccountBalance(tm, walletID, accountID)
 
 	for _, to := range tos {
-		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, to, "0.5", "", nil)
+		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, to, "0.01", "", nil)
 		if err != nil {
 			return
 		}
@@ -159,49 +159,41 @@ func TestTransfer(t *testing.T) {
 		if err != nil {
 			return
 		}
-		time.Sleep(30 * time.Second)
+		//time.Sleep(30 * time.Second)
 	}
 
 }
 
 func TestTransferNrc20(t *testing.T) {
 
-	//fiiimScGn5TGQFjxYXWrCaHsqUeGJW9MTcfZ5L
-	//fiiimScVPvfegV4Wzf1hx1UvnQNLv1sVatwUyj
-	//fiiimJVwi1mPr4ebAD9x18Wzbt2NQxbsCvGLxE
-	//fiiimUkH3QEr2yYT3NmbrWKWSKX739EoMQ4e7Y
-	//fiiimS8BWk1oKnDr1LJn5EpXbSVijKrHVHRybE
 
 	address := []string{
-		//"Nse1BC7HwSNf69BrcqGpw69ZvQTRJ9e6",
-		//"Nse6tSvVHwBPTm3XfY9x37HRLjb9oq8h",
-		//"NsdvAokV31ZxHBJnwbxQeug91BJdScMs",
-		//"Nse5WHdQnRC3dd87BnAjGEWyjj3yWzx2",
-		//"NsdwWYFeyCiWi8gaK6igqJurjoY9TCqo",
-
-		"NsdyGq6Kxk4mYt59yZUE3mK2ASufeTMS",
+		"NULSd6HgTtSc4FxvR7UjMSjpiaEue8vLgvFUz",
+		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
+		"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
+		"NULSd6HgYuJYUTZJXscSutnXBp37YUKY3khDf",
+		"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
+		"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
+		"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
 	}
 
 	tm := testInitWalletManager()
-	walletID := "VzLUoGiZioDZDyisPtKFMD7Sfy485Qih2N"
-	//accountID := "CbhEiN6Pm3ZjJDCkwybanzs192Mo32jhph2RY4ZLMAFN"
-	accountID := "HhMp9EJwZpNFhfUuSSXanocxgPGz9eLoSbPbqawcWtWU"
+	walletID := "VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7"
+	accountID := "7AskbZZjhevnJxWAsNZ5HsyeddptEsqVwPuTu9CcpMch"
 
-	//accountID := "4h4wnCmpzgy3ZTeoMHs3gjDCuWyXQcxDsk9dcwbNGhmR"
-	//to := "fiiimYt7qZekpQKZauBGxv8kGFJGdMyYtzSgdP"
-
-	//testGetAssetsAccountBalance(tm, walletID, accountID)
 
 	contract := &openwallet.SmartContract{
-		Address:  "NseCpCRzVU3U9RSYyTwSFhdL71wEnpDv",
+		Address:  "NULSd6HgmBys1gA2SztAKMVfob3NbC2a9iY7T",
 		Decimals: 8,
-		Name:     "angel",
+		Name:     "CC",
 	}
 
+
+
 	for _, a := range address {
-		time.Sleep(15 * time.Second)
-		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, a, "2", "", contract)
+		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, a, "1", "", contract)
 		if err != nil {
+			log.Error(err)
 			return
 		}
 
@@ -268,21 +260,22 @@ func TestSummary(t *testing.T) {
 
 func TestTokenSummary(t *testing.T) {
 	tm := testInitWalletManager()
-	walletID := "VzLUoGiZioDZDyisPtKFMD7Sfy485Qih2N"
-	accountID := "CbhEiN6Pm3ZjJDCkwybanzs192Mo32jhph2RY4ZLMAFN"
-	summaryAddress := "Nse5VJW4vNDyJXkcMmCTHRD9QQC5T1WS"
+	walletID := "VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7"
+	accountID := "6Dy7yK3w73CSLtC6QD3ddvxNsVZ9f8ffkzEuzoDi5pt4"
+	summaryAddress := "NULSd6Hgj7CK5drU8PYGMQtjMjgR9zMZKRKbL"
 
 	testGetAssetsAccountBalance(tm, walletID, accountID)
 
 	for {
 		contract := &openwallet.SmartContract{
-			Address:  "NseCpCRzVU3U9RSYyTwSFhdL71wEnpDv",
+			Address:  "NULSd6HgmBys1gA2SztAKMVfob3NbC2a9iY7T",
 			Decimals: 8,
-			Name:     "angel",
+			Name:     "CC",
 		}
 
+
 		fee := &openwallet.FeesSupportAccount{
-			AccountID:        "HhMp9EJwZpNFhfUuSSXanocxgPGz9eLoSbPbqawcWtWU",
+			AccountID:        "7AskbZZjhevnJxWAsNZ5HsyeddptEsqVwPuTu9CcpMch",
 			FixSupportAmount: "0.2",
 		}
 
@@ -319,7 +312,12 @@ func TestTokenSummary(t *testing.T) {
 				return
 			}
 		}
-		time.Sleep(50 * time.Second)
+		time.Sleep(10 * time.Second)
 	}
 
+}
+
+func TestR(t *testing.T) {
+	s := "123456789"
+	log.Warn(s[len(s)-5:])
 }

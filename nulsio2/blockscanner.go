@@ -541,12 +541,12 @@ func (bs *NULSBlockScanner) extractTransaction(trx *Tx, blockHash string, result
 
 		blocktime := trx.GetTime()
 
-		if trx.Type == 2 || trx.Type == 101 {
+		if trx.Type == 2 || trx.Type == 16 {
 
 			txType := 1
 			if trx.Type == 2 {
 				txType = 0
-			} else if trx.Type == 101 {
+			} else if trx.Type == 16 {
 				txType = 1
 			}
 			//提取出账部分记录
@@ -605,7 +605,7 @@ func (bs *NULSBlockScanner) extractTokenTransaction(trx *Tx, blockHash string, r
 		if success {
 
 			switch trx.Type {
-			case 101:
+			case 16:
 				tokenTrans, err := bs.wm.Api.GetTokenByHash(trx.Hash)
 				if err != nil {
 					bs.wm.Log.Error("Token tokenTrans is nil,hash:", trx.Hash, " ,err:", err.Error())

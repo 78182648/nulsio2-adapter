@@ -63,6 +63,7 @@ type WalletConfig struct {
 
 	FixFees string
 
+	TokenFees string
 }
 
 func NewConfig(symbol string) *WalletConfig {
@@ -74,6 +75,7 @@ func NewConfig(symbol string) *WalletConfig {
 	c.CurveType = CurveType
 	c.MaxTxInputs = 50
 	c.FixFees = "0.001"
+	c.TokenFees = "0.007"
 	//区块链数据
 	//blockchainDir = filepath.Join("data", strings.ToLower(Symbol), "blockchain")
 	//配置文件路径

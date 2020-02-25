@@ -12,6 +12,7 @@ require (
 	github.com/imroc/req v0.2.3
 	github.com/pkg/errors v0.8.1
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24
+	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/tidwall/gjson v1.2.1
 	golang.org/x/crypto v0.0.0-20190404164418-38d8ce5564a5
 )
