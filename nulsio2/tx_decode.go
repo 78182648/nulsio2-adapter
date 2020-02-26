@@ -714,11 +714,11 @@ func (decoder *TransactionDecoder) SignRawTransaction(wrapper openwallet.WalletD
 			}
 
 			//签名交易（无特殊签名）
-			signature, retCode := owcrypt.Signature(keyBytes, nil, 0, txHash, 32, owcrypt.ECC_CURVE_SECP256K1)
-			if retCode != owcrypt.SUCCESS {
-				return fmt.Errorf("transaction hash sign failed, unexpected error: Failed to sign message!")
+			signature, _, sigErr := owcrypt.Signature(keyBytes, nil, txHash,  owcrypt.ECC_CURVE_SECP256K1)
+			if sigErr != owcrypt.SUCCESS {
+				return  fmt.Errorf("transaction hash sign failed")
 			}
-
+			//signature = append(signature, v)
 			keySignature.Signature = hex.EncodeToString(signature)
 		}
 	}

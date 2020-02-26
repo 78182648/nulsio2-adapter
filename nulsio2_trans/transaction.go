@@ -3,8 +3,6 @@ package nulsio2_trans
 import (
 	"encoding/hex"
 	"encoding/json"
-	"errors"
-	"github.com/blocktree/go-owcrypt"
 )
 
 type Vin struct {
@@ -65,16 +63,7 @@ func CreateEmptyRawTransaction(vins []Vin, vouts []Vout, remark string, lockTime
 	return hex.EncodeToString(txBytes), result, nil
 }
 
-func SignTransactionMessage(message []byte, prikey []byte) ([]byte, error) {
 
-	signature, retCode := owcrypt.Signature(prikey, nil, 0, message, 32, owcrypt.ECC_CURVE_SECP256K1)
-	if retCode != owcrypt.SUCCESS {
-		return nil, errors.New("Failed to sign message!")
-	}
-
-	return signature,nil
-
-}
 
 type SigPub struct {
 	PublicKey []byte

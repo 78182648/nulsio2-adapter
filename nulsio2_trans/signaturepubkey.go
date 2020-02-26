@@ -3,8 +3,6 @@ package nulsio2_trans
 import (
 	"errors"
 	"math/big"
-
-	owcrypt "github.com/blocktree/go-owcrypt"
 )
 
 type SignaturePubkey struct {
@@ -31,32 +29,6 @@ func serilizeS(sig []byte) []byte {
 	return sig
 }
 
-func calcSignaturePubkey(txHash [][]byte, unlockData []TxUnlock) ([]SignaturePubkey, error) {
-	if len(txHash) != len(unlockData) {
-		return nil, errors.New("The number of private keys and hashes is not match!")
-	}
-	ret := []SignaturePubkey{}
-	for i := 0; i < len(txHash); i++ {
-		if unlockData[i].PrivateKey == nil || len(unlockData[i].PrivateKey) != 32 {
-			return nil, errors.New("Invalid Private key!")
-		}
-		if txHash[i] == nil || len(txHash[i]) != 32 {
-			return nil, errors.New("Invalid transaction hash data!")
-		}
-		sig, err := owcrypt.Signature(unlockData[i].PrivateKey, nil, 0, txHash[i], 32, owcrypt.ECC_CURVE_SECP256K1)
-		if err != owcrypt.SUCCESS {
-			return nil, errors.New("Signature failed!")
-		}
-		sig = serilizeS(sig)
-		pub, err := owcrypt.GenPubkey(unlockData[i].PrivateKey, owcrypt.ECC_CURVE_SECP256K1)
-		if err != owcrypt.SUCCESS {
-			return nil, errors.New("Get Pubkey failed!")
-		}
-		pub = owcrypt.PointCompress(pub, owcrypt.ECC_CURVE_SECP256K1)
-		ret = append(ret, SignaturePubkey{sig, pub})
-	}
-	return ret, nil
-}
 
 func (sp SignaturePubkey) encodeToScript(sigType byte) []byte {
 	r := sp.Signature[:32]
