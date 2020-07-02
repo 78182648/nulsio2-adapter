@@ -388,7 +388,7 @@ func (this *Client) SendRawTransaction(hex string) (string, error) {
 		return result.Get("hash").String(), nil
 	}
 
-	return "", errors.New("unknow error")
+	return "", errors.New(result.Raw)
 }
 
 func (c *Client) Call(method string, id int64, params []interface{}) (*gjson.Result, error) {

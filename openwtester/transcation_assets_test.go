@@ -127,13 +127,13 @@ func TestTransfer(t *testing.T) {
 	//to := "NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC"
 
 	tos := []string{
-		"NULSd6HgTtSc4FxvR7UjMSjpiaEue8vLgvFUz",
-		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
-		"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
-		"NULSd6HgYuJYUTZJXscSutnXBp37YUKY3khDf",
-		"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
-		"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
-		"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
+		"NULSd6HgjWMfZwMW27op6BP1567Uu4qe6KugD",
+		//"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
+		//"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
+		//"NULSd6HgYuJYUTZJXscSutnXBp37YUKY3khDf",
+		//"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
+		//"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
+		//"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
 	}
 
 	//accountID := "4h4wnCmpzgy3ZTeoMHs3gjDCuWyXQcxDsk9dcwbNGhmR"
@@ -142,7 +142,7 @@ func TestTransfer(t *testing.T) {
 	testGetAssetsAccountBalance(tm, walletID, accountID)
 
 	for _, to := range tos {
-		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, to, "0.01", "", nil)
+		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, to, "0.001", "", nil)
 		if err != nil {
 			return
 		}
@@ -170,13 +170,13 @@ func TestTransferNrc20(t *testing.T) {
 
 
 	address := []string{
-		"NULSd6HgTtSc4FxvR7UjMSjpiaEue8vLgvFUz",
-		"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
-		"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
-		"NULSd6HgYuJYUTZJXscSutnXBp37YUKY3khDf",
-		"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
-		"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
-		"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
+		"NULSd6HgYWfCYbxeVLC3zTfcqhtovXZfLY7z1",
+		//"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
+		//"NULSd6HgYnSuKoZxZzL8ZxvbB6oS2zzqEP2W1",
+		//"NULSd6HgYuJYUTZJXscSutnXBp37YUKY3khDf",
+		//"NULSd6HgaZoBqc2uxrYF8ApM6f5ZVbcPshzTJ",
+		//"NULSd6Hgap7WJw6inBDSccToUdpth8uXzPfvL",
+		//"NULSd6HgapiuG6RxP7LXpNa94cCwuaesMQUk8",
 	}
 
 	tm := testInitWalletManager()
