@@ -127,8 +127,8 @@ func TestSubscribeAddress(t *testing.T) {
 	tm := testInitWalletManager()
 
 	//GetSourceKeyByAddress 获取地址对应的数据源标识
-	scanAddressFunc := func(address string) (string, bool) {
-		key, ok := addrs[address]
+	scanTargetFunc := func(target openwallet.ScanTarget) (string, bool) {
+		key, ok := addrs[target.Address]
 		if !ok {
 			return "", false
 		}
@@ -175,7 +175,7 @@ func TestSubscribeAddress(t *testing.T) {
 		return
 	}
 
-	scanner.SetBlockScanAddressFunc(scanAddressFunc)
+	scanner.SetBlockScanTargetFunc(scanTargetFunc)
 
 	sub := subscriberSingle{manager: tm}
 	scanner.AddObserver(&sub)

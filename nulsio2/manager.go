@@ -16,6 +16,7 @@
 package nulsio2
 
 import (
+	"github.com/blocktree/nulsio2-adapter/nulsio2_addrdec"
 	"github.com/blocktree/openwallet/v2/log"
 	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
@@ -27,6 +28,7 @@ type WalletManager struct {
 	Api             *Client                         // 节点客户端
 	Config          *WalletConfig                   // 节点配置
 	Decoder         openwallet.AddressDecoder       //地址编码器
+	DecoderV2    openwallet.AddressDecoderV2   //地址编码器V2
 	TxDecoder       openwallet.TransactionDecoder   //交易单编码器
 	Log             *log.OWLogger                   //日志工具
 	ContractDecoder openwallet.SmartContractDecoder //智能合约解析器
@@ -41,6 +43,7 @@ func NewWalletManager() *WalletManager {
 	wm.Blockscanner = NewNULSBlockScanner(&wm)
 	wm.Decoder = NewAddressDecoder(&wm)
 	wm.TxDecoder = NewTransactionDecoder(&wm)
+	wm.DecoderV2 = &nulsio2_addrdec.AddressDecoderV2{}
 	wm.Log = log.NewOWLogger(wm.Symbol())
 	wm.ContractDecoder = NewContractDecoder(&wm)
 	return &wm
