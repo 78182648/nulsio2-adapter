@@ -18,8 +18,8 @@ package nulsio2
 import (
 	"errors"
 	"github.com/astaxie/beego/config"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 	"math/big"
 )
@@ -98,7 +98,6 @@ func (wm *WalletManager) GetAssetsLogger() *log.OWLogger {
 func (wm *WalletManager) GetSmartContractDecoder() openwallet.SmartContractDecoder {
 	return wm.ContractDecoder
 }
-
 
 func ConvertFloatStringToBigInt(amount string, decimals int) (*big.Int, error) {
 	vDecimal, _ := decimal.NewFromString(amount)

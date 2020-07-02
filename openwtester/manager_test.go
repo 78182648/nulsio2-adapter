@@ -1,9 +1,9 @@
 package openwtester
 
 import (
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openw"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openw"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"path/filepath"
 	"testing"
 )
@@ -11,8 +11,8 @@ import (
 var (
 	testApp        = "NULScoin-adapter"
 	configFilePath = filepath.Join("conf")
-	dbFilePath = filepath.Join("data", "db")
-	dbFileName = "blockchain-NULS2.db"
+	dbFilePath     = filepath.Join("data", "db")
+	dbFileName     = "blockchain-NULS2.db"
 )
 
 func testInitWalletManager() *openw.WalletManager {
@@ -127,7 +127,6 @@ func TestWalletManager_CreateAddress(t *testing.T) {
 		log.Info(addr.Address)
 	}
 
-
 	tm.CloseDB(testApp)
 }
 
@@ -152,7 +151,6 @@ func TestWalletManager_GetAddressList(t *testing.T) {
 	tm.CloseDB(testApp)
 }
 
-
 func TestWalletManager_GetAddressList2(t *testing.T) {
 
 	tm := testInitWalletManager()
@@ -174,8 +172,6 @@ func TestWalletManager_GetAddressList2(t *testing.T) {
 	tm.CloseDB(testApp)
 }
 
-
-
 func TestBatchCreateAddressByAccount(t *testing.T) {
 
 	tm := testInitWalletManager()
@@ -189,7 +185,6 @@ func TestBatchCreateAddressByAccount(t *testing.T) {
 		t.Errorf("error: %v", err)
 		return
 	}
-
 
 	assetsMgr, err := openw.GetAssetsAdapter(symbol)
 	if err != nil {
@@ -212,10 +207,6 @@ func TestBatchCreateAddressByAccount(t *testing.T) {
 	log.Infof("create address")
 
 }
-
-
-
-
 
 func TestBatchCreateAddressByAccount2(t *testing.T) {
 
@@ -231,7 +222,6 @@ func TestBatchCreateAddressByAccount2(t *testing.T) {
 		return
 	}
 
-
 	assetsMgr, err := openw.GetAssetsAdapter(symbol)
 	if err != nil {
 		log.Error(symbol, "is not support")
@@ -253,7 +243,6 @@ func TestBatchCreateAddressByAccount2(t *testing.T) {
 	log.Infof("create address")
 
 }
-
 
 //VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7  目标
 //NULSd6Hgj7CK5drU8PYGMQtjMjgR9zMZKRKbL

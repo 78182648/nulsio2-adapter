@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"github.com/blocktree/go-owcrypt"
 	"github.com/blocktree/nulsio2-adapter/nulsio2_trans"
-	"github.com/blocktree/openwallet/common"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/common"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 	"math/big"
 	"sort"
@@ -37,7 +37,7 @@ func (decoder *TransactionDecoder) CreateRawTransaction(wrapper openwallet.Walle
 		return decoder.CreateSimpleRawNrc20Transaction(wrapper, rawTx)
 		//return openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support in nuls2.0")
 	} else {
-		_,err := decoder.CreateSimpleRawTransaction(wrapper, rawTx)
+		_, err := decoder.CreateSimpleRawTransaction(wrapper, rawTx)
 		return err
 	}
 }
@@ -52,7 +52,7 @@ func (decoder *TransactionDecoder) CreateSummaryRawTransactionWithError(wrapper 
 }
 
 //CreateRawTransaction 创建交易单
-func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet.WalletDAI, rawTx *openwallet.RawTransaction) (string,error) {
+func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet.WalletDAI, rawTx *openwallet.RawTransaction) (string, error) {
 
 	var (
 		decimals        = decoder.wm.Decimal()
@@ -64,15 +64,15 @@ func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet
 	//获取wallet
 	addresses, err := wrapper.GetAddressList(0, -1, "AccountID", accountID) //wrapper.GetWallet().GetAddressesByAccount(rawTx.Account.AccountID)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	if len(addresses) == 0 {
-		return "",fmt.Errorf("[%s] have not addresses", accountID)
+		return "", fmt.Errorf("[%s] have not addresses", accountID)
 	}
 
 	if len(rawTx.To) > 1 {
-		return "",openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support many address in nuls2.0")
+		return "", openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support many address in nuls2.0")
 
 	}
 
@@ -83,7 +83,7 @@ func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet
 
 	addrBalanceArray, err := decoder.wm.Blockscanner.GetBalanceByAddress(searchAddrs...)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	var amountStr string
@@ -128,27 +128,25 @@ func (decoder *TransactionDecoder) CreateSimpleRawTransaction(wrapper openwallet
 	}
 
 	if findAddrBalance == nil {
-		return "",openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "all address's balance of account is not enough")
+		return "", openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "all address's balance of account is not enough")
 	}
 
 	//最后创建交易单
-	hexStr,err := decoder.createSimpleRawTransaction(
+	hexStr, err := decoder.createSimpleRawTransaction(
 		wrapper,
 		rawTx,
 		findAddrBalance,
 		fixFees,
-		"","")
+		"", "")
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
-	return hexStr,nil
+	return hexStr, nil
 }
 
-
-
 //CreateRawTransaction 创建交易单
-func (decoder *TransactionDecoder) createSimpleRawTransactionForNrc20Main(wrapper openwallet.WalletDAI, rawTx *openwallet.RawTransaction,nonce string) (string,error) {
+func (decoder *TransactionDecoder) createSimpleRawTransactionForNrc20Main(wrapper openwallet.WalletDAI, rawTx *openwallet.RawTransaction, nonce string) (string, error) {
 
 	var (
 		decimals        = decoder.wm.Decimal()
@@ -160,15 +158,15 @@ func (decoder *TransactionDecoder) createSimpleRawTransactionForNrc20Main(wrappe
 	//获取wallet
 	addresses, err := wrapper.GetAddressList(0, -1, "AccountID", accountID) //wrapper.GetWallet().GetAddressesByAccount(rawTx.Account.AccountID)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	if len(addresses) == 0 {
-		return "",fmt.Errorf("[%s] have not addresses", accountID)
+		return "", fmt.Errorf("[%s] have not addresses", accountID)
 	}
 
 	if len(rawTx.To) > 1 {
-		return "",openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support many address in nuls2.0")
+		return "", openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support many address in nuls2.0")
 
 	}
 
@@ -179,7 +177,7 @@ func (decoder *TransactionDecoder) createSimpleRawTransactionForNrc20Main(wrappe
 
 	addrBalanceArray, err := decoder.wm.Blockscanner.GetBalanceByAddress(searchAddrs...)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	var amountStr string
@@ -224,21 +222,21 @@ func (decoder *TransactionDecoder) createSimpleRawTransactionForNrc20Main(wrappe
 	}
 
 	if findAddrBalance == nil {
-		return "",openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "all address's balance of account is not enough")
+		return "", openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "all address's balance of account is not enough")
 	}
 
 	//最后创建交易单
-	hexStr,err := decoder.createSimpleRawTransaction(
+	hexStr, err := decoder.createSimpleRawTransaction(
 		wrapper,
 		rawTx,
 		findAddrBalance,
 		fixFees,
-		"",nonce)
+		"", nonce)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
-	return hexStr,nil
+	return hexStr, nil
 }
 
 //CreateRawTransaction 创建交易单
@@ -251,9 +249,9 @@ func (decoder *TransactionDecoder) CreateSimpleRawNrc20Transaction(wrapper openw
 		findAddrBalance *AddrBalance
 		tokenAddress    string
 		tokenDecimal    uint64
-		sendAddress        string
-		to                 string
-		totalSend          = decimal.New(0, 0)
+		sendAddress     string
+		to              string
+		totalSend       = decimal.New(0, 0)
 	)
 
 	//获取wallet
@@ -268,7 +266,7 @@ func (decoder *TransactionDecoder) CreateSimpleRawNrc20Transaction(wrapper openw
 		return errors.New("This is a token transaction!")
 	}
 
-	if len(rawTx.To)>1{
+	if len(rawTx.To) > 1 {
 		return openwallet.Errorf(openwallet.ErrUnknownException, "nrc20 not support many toAddress")
 	}
 
@@ -280,8 +278,6 @@ func (decoder *TransactionDecoder) CreateSimpleRawNrc20Transaction(wrapper openw
 	if len(addresses) == 0 {
 		return fmt.Errorf("[%s] have not addresses", accountID)
 	}
-
-
 
 	searchAddrs := make([]string, 0)
 	for _, address := range addresses {
@@ -366,7 +362,7 @@ func (decoder *TransactionDecoder) CreateSimpleRawNrc20Transaction(wrapper openw
 		rawTx,
 		findAddrBalance,
 		fixFees,
-		"",token)
+		"", token)
 	if errE != nil {
 		return err
 	}
@@ -453,12 +449,12 @@ func (decoder *TransactionDecoder) CreateSimpleSummaryRawTransaction(wrapper ope
 
 		aaddrBalanceDecimal := common.BigIntToDecimals(addrBalance_BI, decimals)
 
-		_,createErr := decoder.createSimpleRawTransaction(
+		_, createErr := decoder.createSimpleRawTransaction(
 			wrapper,
 			rawTx,
 			&AddrBalance{Address: addrBalance.Address, Balance: &aaddrBalanceDecimal},
 			feeInfo,
-			"","")
+			"", "")
 		if createErr != nil {
 			return nil, createErr
 		}
@@ -478,9 +474,6 @@ func (decoder *TransactionDecoder) CreateSimpleSummaryRawTransaction(wrapper ope
 	}
 	return raTxWithErr, nil
 }
-
-
-
 
 //CreateNrc20RawTransaction 创建合约交易
 
@@ -567,10 +560,8 @@ func (this *TransactionDecoder) CreateNrc20TokenSummaryRawTransaction(wrapper op
 		sumAmount_BI := new(big.Int)
 		sumAmount_BI.Sub(addrBalance_BI, retainedBalance)
 
-
 		sumAmount := common.BigIntToDecimals(sumAmount_BI, int32(tokenDecimals))
 		fees, _ := decimal.NewFromString(this.wm.Config.TokenFees)
-
 
 		coinBalances, createErr := this.wm.Blockscanner.GetBalanceByAddress(addrBalance.Balance.Address)
 		if createErr != nil {
@@ -580,7 +571,7 @@ func (this *TransactionDecoder) CreateNrc20TokenSummaryRawTransaction(wrapper op
 		if len(coinBalances) <= 0 {
 			continue
 		}
-		coinBalance,_ := decimal.NewFromString(coinBalances[0].Balance)
+		coinBalance, _ := decimal.NewFromString(coinBalances[0].Balance)
 		//判断主币余额是否够手续费
 		if coinBalance.Cmp(fees) < 0 {
 
@@ -627,8 +618,7 @@ func (this *TransactionDecoder) CreateNrc20TokenSummaryRawTransaction(wrapper op
 					Required: 1,
 				}
 
-				hexStr,createTxErr := this.createSimpleRawTransactionForNrc20Main(wrapper, rawTx,tmpNonce)
-
+				hexStr, createTxErr := this.createSimpleRawTransactionForNrc20Main(wrapper, rawTx, tmpNonce)
 
 				rawTxWithErr := &openwallet.RawTransactionWithError{
 					RawTx: rawTx,
@@ -676,7 +666,7 @@ func (this *TransactionDecoder) CreateNrc20TokenSummaryRawTransaction(wrapper op
 			rawTx,
 			&AddrBalance{Address: addrBalance.Balance.Address, Balance: &coinBalance, TokenBalance: &sumAmount},
 			fixFees,
-			"",token)
+			"", token)
 		rawTxWithErr := &openwallet.RawTransactionWithError{
 			RawTx: rawTx,
 			Error: createTxErr,
@@ -689,6 +679,7 @@ func (this *TransactionDecoder) CreateNrc20TokenSummaryRawTransaction(wrapper op
 
 	return rawTxArray, nil
 }
+
 //SignRawTransaction 签名交易单
 func (decoder *TransactionDecoder) SignRawTransaction(wrapper openwallet.WalletDAI, rawTx *openwallet.RawTransaction) error {
 
@@ -714,9 +705,9 @@ func (decoder *TransactionDecoder) SignRawTransaction(wrapper openwallet.WalletD
 			}
 
 			//签名交易（无特殊签名）
-			signature, _, sigErr := owcrypt.Signature(keyBytes, nil, txHash,  owcrypt.ECC_CURVE_SECP256K1)
+			signature, _, sigErr := owcrypt.Signature(keyBytes, nil, txHash, owcrypt.ECC_CURVE_SECP256K1)
 			if sigErr != owcrypt.SUCCESS {
-				return  fmt.Errorf("transaction hash sign failed")
+				return fmt.Errorf("transaction hash sign failed")
 			}
 			//signature = append(signature, v)
 			keySignature.Signature = hex.EncodeToString(signature)
@@ -850,7 +841,7 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	rawTx *openwallet.RawTransaction,
 	addrBalance *AddrBalance,
 	feeInfo *big.Int,
-	callData,nonce string)(string,error) {
+	callData, nonce string) (string, error) {
 
 	var (
 		err              error
@@ -862,15 +853,15 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	)
 
 	if addrBalance == nil {
-		return "",fmt.Errorf("Receiver addresses is empty! ")
+		return "", fmt.Errorf("Receiver addresses is empty! ")
 	}
 
 	fromAddress, err := decoder.wm.Api.GetAddressBalance(addrBalance.Address, 1)
 	if err != nil {
-		return "",openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "can't find the address:"+err.Error())
+		return "", openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "can't find the address:"+err.Error())
 	}
 	//fromAddress.Nonce = "0000000000000000"
-	if nonce != ""{
+	if nonce != "" {
 		fromAddress.Nonce = nonce
 	}
 
@@ -897,7 +888,7 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 
 		to, err := decoder.wm.Api.GetAddressBalance(toAddress, 1)
 		if err != nil {
-			return "",openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "can't find the address:"+err.Error())
+			return "", openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "can't find the address:"+err.Error())
 		}
 		out := nulsio2_trans.Vout{
 			Address:       toAddress,
@@ -921,7 +912,7 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	signTrans, _, err := nulsio2_trans.CreateEmptyRawTransaction(vins, vouts, "", lockTime, replaceable, nil)
 
 	if err != nil {
-		return "",fmt.Errorf("create transaction failed, unexpected error: %v", err)
+		return "", fmt.Errorf("create transaction failed, unexpected error: %v", err)
 	}
 
 	rawTx.RawHex = signTrans
@@ -935,12 +926,12 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 
 	addr, err := wrapper.GetAddress(addrBalance.Address)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	beSignHexHex, err := hex.DecodeString(signTrans)
 	if err != nil {
-		return "",err
+		return "", err
 	}
 
 	message := nulsio2_trans.Sha256Twice(beSignHexHex) //sha256
@@ -968,10 +959,8 @@ func (decoder *TransactionDecoder) createSimpleRawTransaction(
 	rawTx.TxFrom = txFrom
 	rawTx.TxTo = txTo
 
-	return messageStr,nil
+	return messageStr, nil
 }
-
-
 
 //createSimpleRawTransaction 创建原始交易单
 func (decoder *TransactionDecoder) createSimpleNrc20RawTransaction(
@@ -992,7 +981,7 @@ func (decoder *TransactionDecoder) createSimpleNrc20RawTransaction(
 	)
 
 	if addrBalance == nil {
-		return openwallet.Errorf(openwallet.ErrUnknownException,"Receiver addresses is empty! ")
+		return openwallet.Errorf(openwallet.ErrUnknownException, "Receiver addresses is empty! ")
 	}
 
 	fromAddress, err := decoder.wm.Api.GetAddressBalance(addrBalance.Address, 1)
@@ -1000,9 +989,9 @@ func (decoder *TransactionDecoder) createSimpleNrc20RawTransaction(
 		return openwallet.Errorf(openwallet.ErrInsufficientBalanceOfAddress, "can't find the address:"+err.Error())
 	}
 
-	feeDe,_ := decimal.NewFromString(decoder.wm.Config.TokenFees)
-	if feeDe.Equal(decimal.Zero){
-		feeDe,_ = decimal.NewFromString("0.01")
+	feeDe, _ := decimal.NewFromString(decoder.wm.Config.TokenFees)
+	if feeDe.Equal(decimal.Zero) {
+		feeDe, _ = decimal.NewFromString("0.01")
 	}
 	//装配输入(直接使用手续费)
 	in := nulsio2_trans.Vin{
@@ -1044,7 +1033,7 @@ func (decoder *TransactionDecoder) createSimpleNrc20RawTransaction(
 	signTrans, _, err := nulsio2_trans.CreateEmptyRawTransaction(vins, vouts, "", lockTime, replaceable, token)
 
 	if err != nil {
-		return openwallet.Errorf(openwallet.ErrUnknownException,"create transaction failed, unexpected error: %v"+ err.Error())
+		return openwallet.Errorf(openwallet.ErrUnknownException, "create transaction failed, unexpected error: %v"+err.Error())
 	}
 
 	rawTx.RawHex = signTrans
@@ -1058,12 +1047,12 @@ func (decoder *TransactionDecoder) createSimpleNrc20RawTransaction(
 
 	addr, err := wrapper.GetAddress(addrBalance.Address)
 	if err != nil {
-		return openwallet.Errorf(openwallet.ErrUnknownException,err.Error())
+		return openwallet.Errorf(openwallet.ErrUnknownException, err.Error())
 	}
 
 	beSignHexHex, err := hex.DecodeString(signTrans)
 	if err != nil {
-		return  openwallet.Errorf(openwallet.ErrUnknownException,err.Error())
+		return openwallet.Errorf(openwallet.ErrUnknownException, err.Error())
 	}
 
 	message := nulsio2_trans.Sha256Twice(beSignHexHex) //sha256

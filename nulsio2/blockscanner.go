@@ -18,8 +18,8 @@ package nulsio2
 import (
 	"errors"
 	"fmt"
-	"github.com/blocktree/openwallet/common"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/common"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 	"time"
 )

@@ -2,8 +2,8 @@ package nulsio2
 
 import (
 	"errors"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 )
 
@@ -12,14 +12,11 @@ type NulsContractDecoder struct {
 	wm *WalletManager
 }
 
-
-
 func NewContractDecoder(wm *WalletManager) *NulsContractDecoder {
 	decoder := NulsContractDecoder{}
 	decoder.wm = wm
 	return &decoder
 }
-
 
 type AddrBalance struct {
 	Address      string
@@ -69,7 +66,6 @@ func (this *WalletManager) GetTokenBalanceByAddress(contractAddr string, addrs .
 		done <- 1
 	}()
 
-
 	queryBalance := func(addr AddrBalanceInf) {
 		threadControl <- 1
 		defer func() {
@@ -77,7 +73,7 @@ func (this *WalletManager) GetTokenBalanceByAddress(contractAddr string, addrs .
 			<-threadControl
 		}()
 
-		balance, err := this.Api.GetTokenBalances(contractAddr,addr.GetAddress())
+		balance, err := this.Api.GetTokenBalances(contractAddr, addr.GetAddress())
 		if err != nil {
 			log.Errorf("get address[%v] nrc20 token balance failed, err=%v", addr.GetAddress(), err)
 			return
@@ -124,9 +120,9 @@ func (this *NulsContractDecoder) GetTokenBalanceByAddress(contract openwallet.Sm
 			<-threadControl
 		}()
 
-		balanceTemp, err := this.wm.Api.GetTokenBalancesReal(contract.Address,address)
+		balanceTemp, err := this.wm.Api.GetTokenBalancesReal(contract.Address, address)
 		if err != nil {
-			log.Errorf("get address[%v] nrc20 token balance failed, err=%v",address, err)
+			log.Errorf("get address[%v] nrc20 token balance failed, err=%v", address, err)
 			return
 		}
 		//log.Error(balanceTemp.String())

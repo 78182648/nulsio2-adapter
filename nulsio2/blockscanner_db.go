@@ -2,7 +2,7 @@ package nulsio2
 
 import (
 	"fmt"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/openwallet"
 )
 
 //SaveLocalBlockHead 记录区块高度和hash到本地
@@ -69,7 +69,7 @@ func (bs *NULSBlockScanner) GetLocalBlock(height uint32) (*Block, error) {
 	}
 
 	block := &Block{
-		Height:  uint32(header.Height),
+		Height: uint32(header.Height),
 	}
 	block.Hash = header.Hash
 	block.Previousblockhash = header.Previousblockhash

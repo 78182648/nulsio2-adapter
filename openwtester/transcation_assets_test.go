@@ -16,12 +16,12 @@
 package openwtester
 
 import (
-	"github.com/blocktree/openwallet/openw"
+	"github.com/blocktree/openwallet/v2/openw"
 	"testing"
 	"time"
 
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openwallet"
 )
 
 func testGetAssetsAccountBalance(tm *openw.WalletManager, walletID, accountID string) {
@@ -168,7 +168,6 @@ func TestTransfer(t *testing.T) {
 
 func TestTransferNrc20(t *testing.T) {
 
-
 	address := []string{
 		"NULSd6HgYWfCYbxeVLC3zTfcqhtovXZfLY7z1",
 		//"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
@@ -183,14 +182,11 @@ func TestTransferNrc20(t *testing.T) {
 	walletID := "VzGeU7t6vj2u1dzVmLJrWWsi8DFRBsFAE7"
 	accountID := "7AskbZZjhevnJxWAsNZ5HsyeddptEsqVwPuTu9CcpMch"
 
-
 	contract := &openwallet.SmartContract{
 		Address:  "NULSd6HgmBys1gA2SztAKMVfob3NbC2a9iY7T",
 		Decimals: 8,
 		Name:     "CC",
 	}
-
-
 
 	for _, a := range address {
 		rawTx, err := testCreateTransactionStep(tm, walletID, accountID, a, "1", "", contract)
@@ -274,7 +270,6 @@ func TestTokenSummary(t *testing.T) {
 			Decimals: 8,
 			Name:     "CC",
 		}
-
 
 		fee := &openwallet.FeesSupportAccount{
 			AccountID:        "7AskbZZjhevnJxWAsNZ5HsyeddptEsqVwPuTu9CcpMch",

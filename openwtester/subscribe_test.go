@@ -17,17 +17,16 @@ package openwtester
 
 import (
 	"github.com/astaxie/beego/config"
-	"github.com/blocktree/openwallet/common/file"
-	"github.com/blocktree/openwallet/log"
-	"github.com/blocktree/openwallet/openw"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/common/file"
+	"github.com/blocktree/openwallet/v2/log"
+	"github.com/blocktree/openwallet/v2/openw"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"path/filepath"
 	"testing"
 	"time"
 )
 
 //var tm = testInitWalletManager()
-
 
 ////////////////////////// 测试单个扫描器 //////////////////////////
 
@@ -55,7 +54,6 @@ func (sub *subscriberSingle) BlockExtractDataNotify(sourceKey string, data *open
 
 	log.Std.Notice("data.Transaction: %+v", data.Transaction)
 
-
 	//tm := testInitWalletManager()
 	//walletID := "VzLUoGiZioDZDyisPtKFMD7Sfy485Qih2N"
 	//accountID := "HhMp9EJwZpNFhfUuSSXanocxgPGz9eLoSbPbqawcWtWU"
@@ -80,22 +78,32 @@ func (sub *subscriberSingle) BlockExtractDataNotify(sourceKey string, data *open
 	return nil
 }
 
+func (sub *subscriberSingle) BlockExtractSmartContractDataNotify(sourceKey string, data *openwallet.SmartContractReceipt) error {
 
+	log.Notice("sourceKey:", sourceKey)
+	log.Std.Notice("data.ContractTransaction: %+v", data)
 
-func TestGetTokenBlance(t *testing.T){
+	for i, event := range data.Events {
+		log.Std.Notice("data.Events[%d]: %+v", i, event)
+	}
+
+	return nil
+}
+
+func TestGetTokenBlance(t *testing.T) {
 	tm := testInitWalletManager()
 
-	for i:=0;i<100;i++{
+	for i := 0; i < 100; i++ {
 		walletID := "VzLUoGiZioDZDyisPtKFMD7Sfy485Qih2N"
 		accountID := "CbhEiN6Pm3ZjJDCkwybanzs192Mo32jhph2RY4ZLMAFN"
 
 		contract := openwallet.SmartContract{
-			Address:"NseCpCRzVU3U9RSYyTwSFhdL71wEnpDv",
-			Decimals:8,
-			Name:"angel",
+			Address:  "NseCpCRzVU3U9RSYyTwSFhdL71wEnpDv",
+			Decimals: 8,
+			Name:     "angel",
 		}
 
-		balance, err := tm.GetAssetsAccountTokenBalance(testApp,walletID, accountID, contract)
+		balance, err := tm.GetAssetsAccountTokenBalance(testApp, walletID, accountID, contract)
 		if err != nil {
 			log.Error("GetAssetsAccountBalance failed, unexpected error:", err)
 			return
@@ -111,13 +119,12 @@ func TestSubscribeAddress(t *testing.T) {
 		endRunning = make(chan bool, 1)
 		symbol     = "NULS2"
 		addrs      = map[string]string{
-			"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM":"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
-			"NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC":"NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC",
+			"NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM": "NULSd6HgUoL5aFx8RCMzUjTSDqLWcV2jrg5UM",
+			"NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC": "NULSd6HgVkvve8zBsWvu3Vg8RobNtg17XB9nC",
 		}
 	)
 
 	tm := testInitWalletManager()
-
 
 	//GetSourceKeyByAddress 获取地址对应的数据源标识
 	scanAddressFunc := func(address string) (string, bool) {
@@ -150,7 +157,6 @@ func TestSubscribeAddress(t *testing.T) {
 
 	scanner := assetsMgr.GetBlockScanner()
 
-
 	if scanner.SupportBlockchainDAI() {
 		file.MkdirAll(dbFilePath)
 		dai, err := openwallet.NewBlockchainLocal(filepath.Join(dbFilePath, dbFileName), false)
@@ -162,7 +168,6 @@ func TestSubscribeAddress(t *testing.T) {
 		scanner.SetBlockchainDAI(dai)
 	}
 
-
 	scanner.SetRescanBlockHeight(1422652)
 
 	if scanner == nil {
@@ -172,23 +177,21 @@ func TestSubscribeAddress(t *testing.T) {
 
 	scanner.SetBlockScanAddressFunc(scanAddressFunc)
 
-	sub := subscriberSingle{manager:tm}
+	sub := subscriberSingle{manager: tm}
 	scanner.AddObserver(&sub)
 
 	scanner.Run()
 
-
 	<-endRunning
 }
-
 
 func TestSubscribeScanBlock(t *testing.T) {
 
 	var (
-		symbol     = "NULS2"
-		addrs      = map[string]string{
+		symbol = "NULS2"
+		addrs  = map[string]string{
 			//"Nsdzhw5UzcewtbpweAwXvU7MngCmdNag": "sender",
-			"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H":"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H",
+			"NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H": "NULSd6HgUkssMi6oSjwEn3puNSijLKnyiRV7H",
 		}
 	)
 
@@ -233,18 +236,16 @@ func TestSubscribeScanBlock(t *testing.T) {
 	sub := subscriberSingle{}
 	scanner.AddObserver(&sub)
 
-
-	time.Sleep(5*time.Second)
+	time.Sleep(5 * time.Second)
 }
 
-
-func TestExtractTransactionData(t *testing.T){
+func TestExtractTransactionData(t *testing.T) {
 
 	var (
-		symbol     = "NULS2"
-		addrs      = map[string]string{
+		symbol = "NULS2"
+		addrs  = map[string]string{
 			//"Nsdzhw5UzcewtbpweAwXvU7MngCmdNag": "sender",
-			"NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF":"NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF",
+			"NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF": "NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF",
 		}
 	)
 
@@ -286,8 +287,8 @@ func TestExtractTransactionData(t *testing.T){
 
 	scanner.SetBlockScanAddressFunc(scanAddressFunc)
 
-	resu,_ := scanner.ExtractTransactionData("45551541f7ab98e7ce665b766ac1bce8e305be3e85f4cbe4b1411da1773f2613", func(target openwallet.ScanTarget) (s string, b bool) {
-		return  "NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF",true
+	resu, _ := scanner.ExtractTransactionData("45551541f7ab98e7ce665b766ac1bce8e305be3e85f4cbe4b1411da1773f2613", func(target openwallet.ScanTarget) (s string, b bool) {
+		return "NULSd6HgV9sNKEfG6Qti3H6PYfFNKnpUmT2tF", true
 	})
 
 	log.Warn(resu)

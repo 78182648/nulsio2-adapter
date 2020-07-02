@@ -19,9 +19,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/blocktree/nulsio2-adapter/nulsio2_addrdec"
-	"github.com/blocktree/openwallet/common"
-	"github.com/blocktree/openwallet/crypto"
-	"github.com/blocktree/openwallet/openwallet"
+	"github.com/blocktree/openwallet/v2/common"
+	"github.com/blocktree/openwallet/v2/crypto"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/shopspring/decimal"
 	"time"
 )
@@ -51,7 +51,6 @@ type Block struct {
 	Height uint32 `storm:"id"`
 	Fork   bool
 }
-
 
 func (n *Block) ToBlockHeader() *openwallet.BlockHeader {
 	obj := &openwallet.BlockHeader{}
@@ -130,7 +129,6 @@ func (n *NusBlock) BlockHeader(symbol string) *openwallet.BlockHeader {
 	obj.Symbol = symbol
 	return obj
 }
-
 
 func (n *NusBlock) ToBlock() *Block {
 	obj := &Block{}
@@ -220,5 +218,5 @@ type Nuls2Balance struct {
 	TimeLock      string `json:"timeLock"`
 	ConsensusLock string `json:"consensusLock"`
 	Nonce         string `json:"nonce"`
-	NonceType     int64 `json:"nonceType"`
+	NonceType     int64  `json:"nonceType"`
 }

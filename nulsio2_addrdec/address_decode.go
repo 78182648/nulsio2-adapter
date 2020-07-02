@@ -3,6 +3,7 @@ package nulsio2_addrdec
 import (
 	"crypto/sha256"
 	"github.com/blocktree/go-owcdrivers/addressEncoder"
+	"github.com/blocktree/openwallet/v2/openwallet"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/ripemd160"
 )
@@ -21,6 +22,7 @@ var (
 
 //AddressDecoderV2
 type AddressDecoderV2 struct {
+	*openwallet.AddressDecoderV2Base
 	IsTestNet bool
 }
 
@@ -56,6 +58,47 @@ func (dec *AddressDecoderV2) AddressEncode(hash []byte, opts ...interface{}) (st
 	address := addressEncoder.AddressEncode(hash, cfg)
 	return address, nil
 }
+
+
+// AddressVerify 地址校验
+func (dec *AddressDecoderV2) AddressVerify(address string, opts ...interface{}) bool {
+
+	if address == "" {
+		return false
+	}
+
+	if len(address) < 5 {
+		return false
+	}
+	if address[:5] != "NULSd" {
+		return false
+	}
+
+	address = address[5:]
+	check := Base58Decode([]byte(address))
+	return checkXOR(check)
+}
+
+
+
+
+func checkXOR(hashs []byte) bool {
+	if len(hashs) < 24 {
+		return false
+	}
+	body := hashs[:23]
+
+	xor := byte(0)
+	for _, v := range body {
+		xor ^= v
+	}
+	if xor != hashs[23] {
+		return false
+	}
+	return true
+
+}
+
 
 //sha256之后hash160
 func Sha256hash160(pub []byte) []byte{

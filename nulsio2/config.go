@@ -17,7 +17,7 @@ package nulsio2
 
 import (
 	"github.com/blocktree/go-owcrypt"
-	"github.com/blocktree/openwallet/common/file"
+	"github.com/blocktree/openwallet/v2/common/file"
 	"path/filepath"
 	"strings"
 )
